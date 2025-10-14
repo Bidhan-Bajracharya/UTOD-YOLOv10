@@ -7,6 +7,8 @@ from pathlib import Path
 import torch
 import torch.nn as nn
 
+from ultralytics.nn.bifpn import BiFPN
+
 from ultralytics.nn.modules import (
     AIFI,
     C1,
@@ -916,6 +918,8 @@ def parse_model(d, ch, verbose=True):  # model_dict, input_channels(3)
         elif m is nn.BatchNorm2d:
             args = [ch[f]]
         elif m is Concat:
+            c2 = sum(ch[x] for x in f)
+        elif m is BiFPN:
             c2 = sum(ch[x] for x in f)
         elif m in {Detect, WorldDetect, Segment, Pose, OBB, ImagePoolingAttn, v10Detect}:
             args.append([ch[x] for x in f])
