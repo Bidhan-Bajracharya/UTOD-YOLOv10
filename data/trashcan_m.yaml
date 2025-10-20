@@ -1,5 +1,5 @@
-# D:/UTOD-YOLOv10/data/trashcan.yaml
-path: D:\UTOD\TrashCan\material   # root of your dataset
+# TrashCan Material Dataset YAML Configuration
+path: /home/dsai-st125287/project/TrashCan/material_v   # root of your dataset
 train: images/train
 val: images/val
 
