@@ -106,7 +106,7 @@ def box_iou(box1, box2, eps=1e-7):
     # IoU = inter / (area1 + area2 - inter)
     return inter / ((a2 - a1).prod(2) + (b2 - b1).prod(2) - inter + eps)
 
-
+# def bbox_iou(box1, box2, xywh=True, GIoU=False, DIoU=False, CIoU=False, eps=1e-7):
 def bbox_iou(box1, box2, xywh=True, GIoU=False, DIoU=False, CIoU=False, WIoU=False, alpha=1, scale=True, eps=1e-7):
     """
     Calculate Intersection over Union (IoU) of box1(1, 4) to box2(n, 4).
@@ -152,10 +152,12 @@ def bbox_iou(box1, box2, xywh=True, GIoU=False, DIoU=False, CIoU=False, WIoU=Fal
     # iou = inter / union
     iou = torch.pow(inter/(union + eps), alpha)
 
+    # if CIoU or DIoU or GIoU:
     if CIoU or DIoU or GIoU or WIoU:
         cw = b1_x2.maximum(b2_x2) - b1_x1.minimum(b2_x1)  # convex (smallest enclosing box) width
         ch = b1_y2.maximum(b2_y2) - b1_y1.minimum(b2_y1)  # convex height
         if CIoU or DIoU or WIoU:  # Distance or Complete IoU https://arxiv.org/abs/1911.08287v1
+        # if CIoU or DIoU:  # Distance or Complete IoU https://arxiv.org/abs/1911.08287v1
             # c2 = cw.pow(2) + ch.pow(2) + eps  # convex diagonal squared
             c2 = (cw ** 2 + ch ** 2) ** alpha + eps  # convex diagonal squared
             

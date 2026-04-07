@@ -1,0 +1,6 @@
+path: /home/dsai-st125287/project/RUOD_BLUR
+train: images
+val: images   # same folder, since this is an eval-only dataset
+
+names: [holothurian, echinus, scallop, starfish, fish, corals, diver, cuttlefish, turtle, jellyfish]
+

@@ -1,4 +1,4 @@
-# uodd_baseline.py
+# uodd_wiou.py
 # -------------------------------------------------------------
 # Script to verify label normalization and train YOLOv10 model
 # Dataset: UODD_YOLO (YOLO format)
@@ -80,7 +80,7 @@ if __name__ == "__main__":
             hsv_v=0.3,               # Brightness jitter
             workers=0,               # Safe for HPC single-process setup
             seed=SEED,                # Global seed for reproducibility
-            name="uodd_baseline"            # Experiment name
+            name="uodd_wiou"            # Experiment name
         )
 
         print("\n✅ Training complete.")

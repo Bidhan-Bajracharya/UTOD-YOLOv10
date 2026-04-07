@@ -1,0 +1,10 @@
+# RUOD Dataset YAML Configuration
+path: /home/dsai-st125287/project/RUOD_YOLO   # root of my dataset
+train: images/train
+val: images/test # is named test but used for validation
+
+# test: images/val
+
+# class list
+names: [holothurian, echinus, scallop, starfish, fish, corals, diver, cuttlefish, turtle, jellyfish]
+

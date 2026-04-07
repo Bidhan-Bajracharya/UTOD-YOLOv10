@@ -1,8 +1,8 @@
 # UODD Dataset YAML file
-path: /home/dsai-st125287/project/Underwater-object-detection-dataset   # root of your dataset
-train: imgs/train
-val: imgs/val
-test: imgs/test
+path: /home/dsai-st125287/project/UODD_YOLO   # root of your dataset
+train: images/train
+val: images/val
+test: images/test
 
 # class list
 names: [holothurian, echinus, scallop]

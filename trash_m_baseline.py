@@ -80,7 +80,7 @@ if __name__ == "__main__":
             hsv_v=0.3,               # Brightness jitter
             workers=0,               # Safe for HPC single-process setup
             seed=SEED,                # Global seed for reproducibility
-            name="bs_tcm"            # Experiment name
+            name="tcm_baseline"            # Experiment name
         )
 
         print("\n✅ Training complete.")

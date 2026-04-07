@@ -1,0 +1,35 @@
+# TrashCan Instance Dataset YAML Configuration
+path: /home/dsai-st125287/project/TrashCan/instance_v   # root of the dataset
+train: images/train
+val: images/val
+
+# (optional)
+# test: images/test
+
+# number of classes
+# nc: 22
+
+# class names
+names:
+  - "rov"
+  - "plant"
+  - "animal_fish"
+  - "animal_starfish"
+  - "animal_shells"
+  - "animal_crab"
+  - "animal_eel"
+  - "animal_etc"
+  - "trash_clothing"
+  - "trash_pipe"
+  - "trash_bottle"
+  - "trash_bag"
+  - "trash_snack_wrapper"
+  - "trash_can"
+  - "trash_cup"
+  - "trash_container"
+  - "trash_unknown_instance"
+  - "trash_branch"
+  - "trash_wreckage"
+  - "trash_tarp"
+  - "trash_rope"
+  - "trash_net"

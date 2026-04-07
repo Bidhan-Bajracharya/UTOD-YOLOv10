@@ -1,0 +1,10 @@
+# DUO Dataset YAML Configuration
+path: /home/dsai-st125287/project/DUO   # root of my dataset
+train: images/train
+val: images/test # is named test but used for validation
+
+# test: images/val
+
+# class list
+names: [holothurian, echinus, scallop, starfish]
+

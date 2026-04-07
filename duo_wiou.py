@@ -1,7 +1,7 @@
-# uodd_baseline.py
+# duo_wiou.py
 # -------------------------------------------------------------
 # Script to verify label normalization and train YOLOv10 model
-# Dataset: UODD_YOLO (YOLO format)
+# Dataset: DUO (YOLO format)
 # -------------------------------------------------------------
 
 from ultralytics import YOLOv10
@@ -17,9 +17,9 @@ torch.cuda.manual_seed_all(SEED)
 
 
 # === CONFIGURATION ===
-DATASET_DIR = "/home/dsai-st125287/project/UODD_YOLO"
+DATASET_DIR = "/home/dsai-st125287/project/DUO"
 LABELS_DIR = os.path.join(DATASET_DIR, "labels")
-YAML_PATH = "/home/dsai-st125287/project/UTOD-YOLOv10/data/uodd.yaml"
+YAML_PATH = "/home/dsai-st125287/project/UTOD-YOLOv10/data/duo.yaml" 
 
 # === CHECK LABEL NORMALIZATION ===
 def is_valid(v):
@@ -80,7 +80,7 @@ if __name__ == "__main__":
             hsv_v=0.3,               # Brightness jitter
             workers=0,               # Safe for HPC single-process setup
             seed=SEED,                # Global seed for reproducibility
-            name="uodd_baseline"            # Experiment name
+            name="duo_wiou"            # Experiment name
         )
 
         print("\n✅ Training complete.")
