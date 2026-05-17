@@ -1,0 +1,110 @@
+import argparse
+import os
+import random
+import numpy as np
+import torch
+
+from ultralytics import YOLOv10
+
+# Same dataset dict you used in training
+DATASETS = {
+    "tci": {
+        "dir": "/home/dsai-st125287/project/TrashCan/instance_v",
+        "yaml": "/home/dsai-st125287/project/UTOD-YOLOv10/data/trashcan_i.yaml"
+    },
+    "tcm": {
+        "dir": "/home/dsai-st125287/project/TrashCan/material_v",
+        "yaml": "/home/dsai-st125287/project/UTOD-YOLOv10/data/trashcan_m.yaml"
+    },
+    "ruod": {
+        "dir": "/home/dsai-st125287/project/RUOD_YOLO",
+        "yaml": "/home/dsai-st125287/project/UTOD-YOLOv10/data/ruod.yaml"
+    },
+    "duo": {
+        "dir": "/home/dsai-st125287/project/DUO",
+        "yaml": "/home/dsai-st125287/project/UTOD-YOLOv10/data/duo.yaml"
+    },
+    "uodd": {
+        "dir": "/home/dsai-st125287/project/UODD_YOLO",
+        "yaml": "/home/dsai-st125287/project/UTOD-YOLOv10/data/uodd.yaml"
+    }
+}
+
+def main():
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument("--ds", type=str, required=True,
+                        help="Dataset shortcode: tci, tcm, ruod, duo, uodd")
+    parser.add_argument("--weights", type=str, required=True,
+                        help="Path to trained .pt weights (best.pt)")
+    parser.add_argument("--name", type=str, required=True,
+                        help="Name for the validation run")
+    parser.add_argument("--imgsz", type=int, default=640)
+    parser.add_argument("--batch", type=int, default=32)
+    parser.add_argument("--seed", type=int, default=42)
+    parser.add_argument("--device", type=int, default=0)
+
+    args = parser.parse_args()
+
+    # ---------------------------------------------------------
+    # Resolve dataset paths
+    # ---------------------------------------------------------
+    if args.ds not in DATASETS:
+        raise ValueError(
+            f"Unknown dataset '{args.ds}'. Choose one of: {list(DATASETS.keys())}"
+        )
+
+    YAML_PATH = DATASETS[args.ds]["yaml"]
+
+    print(f"Using dataset '{args.ds}'")
+    print(f"YAML        = {YAML_PATH}")
+    print(f"Weights     = {args.weights}")
+    print(f"Run name    = {args.name}")
+
+    # ---------------------------------------------------------
+    # Seed
+    # ---------------------------------------------------------
+    random.seed(args.seed)
+    np.random.seed(args.seed)
+    torch.manual_seed(args.seed)
+    torch.cuda.manual_seed_all(args.seed)
+
+    # ---------------------------------------------------------
+    # Load model
+    # ---------------------------------------------------------
+    model = YOLOv10(args.weights)
+
+    # ---------------------------------------------------------
+    # Validation
+    # ---------------------------------------------------------
+    print("\n=== Running YOLOv10 Validation ===")
+
+    metrics = model.val(
+        data=YAML_PATH,
+        imgsz=args.imgsz,
+        batch=args.batch,
+        device=args.device,
+        split="val",        # IMPORTANT: ensures val split
+        plots=False,
+        save_json=True,      # saves COCO-style JSON → size metrics guaranteed
+        name=args.name
+    )
+
+    print("\n✅ Validation complete.")
+
+    # ---------------------------------------------------------
+    # Print key metrics
+    # ---------------------------------------------------------
+    print("\n=== Key Metrics ===")
+    print(f"mAP@0.5      : {metrics.box.map50:.4f}")
+    print(f"mAP@0.5:0.95 : {metrics.box.map:.4f}")
+
+    # Size-based AP (this is what you want)
+    if hasattr(metrics.box, "maps"):
+        print("\n=== Size-based AP ===")
+        print(f"AP_small  : {metrics.box.maps[0]:.4f}")
+        print(f"AP_medium : {metrics.box.maps[1]:.4f}")
+        print(f"AP_large  : {metrics.box.maps[2]:.4f}")
+
+if __name__ == "__main__":
+    main()

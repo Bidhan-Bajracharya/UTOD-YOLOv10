@@ -1,0 +1,8 @@
+# UODD Dataset YAML file
+path: /home/dsai-st125287/project/UODD_YOLO   # root of your dataset
+train: images/train
+val: images/val
+test: images/test
+
+# class list
+names: [holothurian, echinus, scallop]

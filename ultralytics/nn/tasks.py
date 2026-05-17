@@ -7,6 +7,8 @@ from pathlib import Path
 import torch
 import torch.nn as nn
 
+from ultralytics.nn.bifpn import BiFPN, BiFPN_Concat2, BiFPN_Concat3, BiFPN_Add2
+
 from ultralytics.nn.modules import (
     AIFI,
     C1,
@@ -53,7 +55,9 @@ from ultralytics.nn.modules import (
     PSA,
     SCDown,
     RepVGGDW,
-    v10Detect
+    v10Detect,
+    DConv, # DCN imports
+    DC2f
 )
 from ultralytics.utils import DEFAULT_CFG_DICT, DEFAULT_CFG_KEYS, LOGGER, colorstr, emojis, yaml_load
 from ultralytics.utils.checks import check_requirements, check_suffix, check_yaml
@@ -125,7 +129,12 @@ class BaseModel(nn.Module):
             (torch.Tensor): The last output of the model.
         """
         y, dt, embeddings = [], [], []  # outputs
-        for m in self.model:
+
+        # For DCN:
+        x = x.cuda()
+
+        # for m in self.model:
+        for m in self.model.cuda():
             if m.f != -1:  # if not from previous layer
                 x = y[m.f] if isinstance(m.f, int) else [x if j == -1 else y[j] for j in m.f]  # from earlier layers
             if profile:
@@ -888,7 +897,9 @@ def parse_model(d, ch, verbose=True):  # model_dict, input_channels(3)
             RepC3,
             PSA,
             SCDown,
-            C2fCIB
+            C2fCIB,
+            DConv,
+            DC2f
         }:
             c1, c2 = ch[f], args[0]
             if c2 != nc:  # if c2 not equal to number of classes (i.e. for Classify() output)
@@ -900,7 +911,7 @@ def parse_model(d, ch, verbose=True):  # model_dict, input_channels(3)
                 )  # num heads
 
             args = [c1, c2, *args[1:]]
-            if m in (BottleneckCSP, C1, C2, C2f, C2fAttn, C3, C3TR, C3Ghost, C3x, RepC3, C2fCIB):
+            if m in (BottleneckCSP, C1, C2, C2f, C2fAttn, C3, C3TR, C3Ghost, C3x, RepC3, C2fCIB, DC2f):
                 args.insert(2, n)  # number of repeats
                 n = 1
         elif m is AIFI:
@@ -916,6 +927,8 @@ def parse_model(d, ch, verbose=True):  # model_dict, input_channels(3)
         elif m is nn.BatchNorm2d:
             args = [ch[f]]
         elif m is Concat:
+            c2 = sum(ch[x] for x in f)
+        elif m in [BiFPN, BiFPN_Concat2, BiFPN_Concat3, BiFPN_Add2]:
             c2 = sum(ch[x] for x in f)
         elif m in {Detect, WorldDetect, Segment, Pose, OBB, ImagePoolingAttn, v10Detect}:
             args.append([ch[x] for x in f])
