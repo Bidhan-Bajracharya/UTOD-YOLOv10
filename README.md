@@ -36,7 +36,15 @@ The main objectives of this project are:
 
 The proposed model is built on top of YOLOv10n and introduces three targeted modifications to improve underwater object detection while keeping the model lightweight for edge deployment.
 
-![Proposed Model Architecture](assets/proposed_architecture.png)
+![Proposed Model Architecture](assets/prop_model.png)
+
+The main architectural changes are:
+
+- **DCNv4 in the backbone**: improves adaptability to irregular, blurred, and partially occluded underwater objects.
+- **BiFPN in the neck**: strengthens multi-scale feature fusion for detecting both small and large objects.
+- **WIoUv3 as the bounding box loss**: improves localization by focusing learning on useful samples and reducing the effect of noisy or ambiguous boxes.
+
+Instead of redesigning the full detector, this work applies selective modifications to YOLOv10n so that accuracy and robustness improve without sacrificing real-time inference performance.
 
 ## Datasets
 
